@@ -1,13 +1,8 @@
-import os
-import time
-
-
 class Gomoku:
 
     def __init__(self):
         self.g_map = [[0 for y in range(15)] for x in range(15)]  # 当前的棋盘
         self.cur_step = 0  # 步数
-        self.max_search_steps = 3  # 最远搜索2回合之后
 
     def move_1step(self, input_by_window=False, pos_x=None, pos_y=None):
         """
@@ -110,23 +105,6 @@ class Gomoku:
                     self.cur_step += 1
                     return
 
-    def ai_play_1step_by_cpp(self):
-        # ai = AI1Step(self, self.cur_step, True)  # AI判断下一步执行什么操作
-        st = time.time()
-        # ai.search(0, [set(), set()], self.max_search_steps)  # 最远看2回合之后
-        mapstring = self.map2string()
-        f_ai = os.popen('GomokuAi.exe ' + mapstring + ' %d %d %d' % (self.cur_step, int(True), self.max_search_steps))
-        try:
-            ai_ope_str = f_ai.readlines()
-            ai_ope = [int(ai_ope_str[1]), int(ai_ope_str[2])]
-            node_len = int(ai_ope_str[0])
-        except ValueError:
-            raise ValueError('AI程序计算出来的数值不正确')
-        ed = time.time()
-        print('生成了%d个节点，用时%.4f' % (node_len, ed - st))
-        self.g_map[ai_ope[0]][ai_ope[1]] = 2
-        self.cur_step += 1
-
     def show(self, res):
         """显示游戏内容"""
         for y in range(15):
@@ -165,9 +143,3 @@ class Gomoku:
                 self.show(res)
                 return
             self.show(0)  # 在游戏还没有结束的情况下，显示游戏内容，并继续下一轮循环
-
-    def map2string(self):
-        mapstring = list()
-        for x in range(15):
-            mapstring.extend(list(map(lambda x0: x0 + 48, self.g_map[x])))
-        return bytearray(mapstring).decode('utf8')

@@ -157,8 +157,7 @@ class GomokuWindow(QMainWindow):
                 self.repaint(0, 0, 650, 650)
                 self.game_restart(res)
                 return
-            # self.g.ai_move_1step()  # 电脑下一步
-            self.g.ai_play_1step_by_cpp()
+            self.g.ai_move_1step()  # 电脑下一步
             res, self.flash_pieces = self.g.game_result(show=True)
             if res != 0:
                 self.repaint(0, 0, 650, 650)
