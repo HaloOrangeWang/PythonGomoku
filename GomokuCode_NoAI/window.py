@@ -101,11 +101,12 @@ class GomokuWindow(QMainWindow):
                         qp.setBrush(QBrush(radial))
                         qp.drawEllipse(QPoint(40 * (x + 1), 40 * (y + 1)), 15, 15)
 
-        qp = QPainter()
-        qp.begin(self)
-        draw_map()  # 绘制棋盘
-        draw_pieces()  # 绘制棋子
-        qp.end()
+        if hasattr(self, 'g'):  # 游戏还没开始的话，就不用画了
+            qp = QPainter()
+            qp.begin(self)
+            draw_map()  # 绘制棋盘
+            draw_pieces()  # 绘制棋子
+            qp.end()
 
     @run_with_exc
     def mouseMoveEvent(self, e):

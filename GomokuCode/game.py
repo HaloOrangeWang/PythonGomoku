@@ -1,6 +1,11 @@
 import os
 import time
 
+AI_USE_CPP = False
+
+if not AI_USE_CPP:  # 是否用C++版的AI脚本
+    from ai import AI1Step
+
 
 class Gomoku:
 
@@ -126,6 +131,28 @@ class Gomoku:
         print('生成了%d个节点，用时%.4f' % (node_len, ed - st))
         self.g_map[ai_ope[0]][ai_ope[1]] = 2
         self.cur_step += 1
+
+    def ai_play_1step_py_python(self):
+        ai = AI1Step(self, self.cur_step, True)  # AI判断下一步执行什么操作
+        st = time.time()
+        ai.search(0, [set(), set()], self.max_search_steps)  # 最远看2回合之后
+        ed = time.time()
+        print('生成了%d个节点，用时%.4f，评价用时%.4f' % (len(ai.method_tree), ed - st, ai.t))
+        if ai.next_node_dx_list[0] == -1:
+            raise ValueError('ai.next_node_dx_list[0] == -1')
+        ai_ope = ai.method_tree[ai.next_node_dx_list[0]].ope
+        if self.g_map[ai_ope[0]][ai_ope[1]] != 0:
+            raise ValueError('self.game_map[ai_ope[0]][ai_ope[1]] = %d' % self.g_map[ai_ope[0]][ai_ope[1]])
+        self.g_map[ai_ope[0]][ai_ope[1]] = 2
+        self.cur_step += 1
+
+    def ai_play_1step(self):
+        if AI_USE_CPP:
+            self.max_search_steps = 3
+            self.ai_play_1step_by_cpp()
+        else:
+            self.max_search_steps = 2
+            self.ai_play_1step_py_python()
 
     def show(self, res):
         """显示游戏内容"""

@@ -101,11 +101,12 @@ class GomokuWindow(QMainWindow):
                         qp.setBrush(QBrush(radial))
                         qp.drawEllipse(QPoint(40 * (x + 1), 40 * (y + 1)), 15, 15)
 
-        qp = QPainter()
-        qp.begin(self)
-        draw_map()  # 绘制棋盘
-        draw_pieces()  # 绘制棋子
-        qp.end()
+        if hasattr(self, 'g'):  # 游戏还没开始的话，就不用画了
+            qp = QPainter()
+            qp.begin(self)
+            draw_map()  # 绘制棋盘
+            draw_pieces()  # 绘制棋子
+            qp.end()
 
     @run_with_exc
     def mouseMoveEvent(self, e):
@@ -158,7 +159,7 @@ class GomokuWindow(QMainWindow):
                 self.game_restart(res)
                 return
             # self.g.ai_move_1step()  # 电脑下一步
-            self.g.ai_play_1step_by_cpp()
+            self.g.ai_play_1step()  # 电脑下一步
             res, self.flash_pieces = self.g.game_result(show=True)
             if res != 0:
                 self.repaint(0, 0, 650, 650)
