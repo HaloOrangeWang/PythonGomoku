@@ -263,7 +263,7 @@ class Node:
                     return 50
 
         # 10. 其他情况。按照棋子的分布来计分（根据这个棋子距离棋盘中心的距离，以及这个棋子周围8格棋子的个数来评分）
-        score_by_num_around = [0, 1, 20, 30, 26, 24, 22, 20, 18]
+        score_by_num_around = [0, 1, 20, 30, 26, 24, 22, 20, 18, 16, 15]
         player_score_num = 0
         ai_score_num = 0
         player_cnt = 0
