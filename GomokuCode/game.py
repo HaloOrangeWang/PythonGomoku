@@ -5,6 +5,8 @@ AI_USE_CPP = False
 
 if not AI_USE_CPP:  # 是否用C++版的AI脚本
     from ai import AI1Step
+else:
+    import example
 
 
 class Gomoku:
@@ -118,13 +120,12 @@ class Gomoku:
     def ai_play_1step_by_cpp(self):
         # ai = AI1Step(self, self.cur_step, True)  # AI判断下一步执行什么操作
         st = time.time()
-        # ai.search(0, [set(), set()], self.max_search_steps)  # 最远看2回合之后
-        mapstring = self.map2string()
-        f_ai = os.popen('GomokuAi.exe ' + mapstring + ' %d %d %d' % (self.cur_step, int(True), self.max_search_steps))
+        mapstring = list()
+        for x in range(15):
+            mapstring.extend(self.g_map[x])
         try:
-            ai_ope_str = f_ai.readlines()
-            ai_ope = [int(ai_ope_str[1]), int(ai_ope_str[2])]
-            node_len = int(ai_ope_str[0])
+            node_len, ai_ope_x, ai_poe_y = example.ai_1step(self.cur_step, int(True), self.max_search_steps, mapstring)
+            ai_ope = [ai_ope_x, ai_poe_y]
         except ValueError:
             raise ValueError('AI程序计算出来的数值不正确')
         ed = time.time()
