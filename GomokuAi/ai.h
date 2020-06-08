@@ -43,8 +43,8 @@ private:
     int ForceScore;
     int PlayerFirst;
     int JudgeRes(); //判断游戏胜负
-    void Judge4(uint32_t& ai_4_num, uint32_t& player_4_num); //判断玩家和电脑的四子的数目
-    void Judge3D(uint32_t& ai_3d_num, uint32_t& player_3d_num); //判断玩家和电脑的活三的数目
+    void Judge4(uint64_t& ai_4_num, uint64_t& player_4_num); //判断玩家和电脑的四子的数目
+    void Judge3D(uint64_t& ai_3d_num, uint64_t& player_3d_num); //判断玩家和电脑的活三的数目
 };
 
 
@@ -57,10 +57,10 @@ public:
         NextNodeList = {-1}; //每个节点的下一步节点列表。-1表示这个节点为最终节点
     }
 
-    void Search(const uint32_t cur_node_dx, const uint32_t max_depth);
+    void Search(const uint64_t cur_node_dx, const uint64_t max_depth);
     Point GetFinalRes();
 
-    uint32_t res;
+    uint64_t res;
     vector<Node> MethodTree;
 private:
     const int PlayerFirst;

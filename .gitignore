@@ -2,3 +2,10 @@ __pycache__/
 .idea/
 *.exe
 *.pyd
+*.bak
+core.*
+*.o
+*.so
+*.gdb_history
+*.pro
+*.pro.user

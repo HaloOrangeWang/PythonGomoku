@@ -1,7 +1,7 @@
 import os
 import time
 
-AI_USE_CPP = False
+AI_USE_CPP = True
 
 if not AI_USE_CPP:  # 是否用C++版的AI脚本
     from ai import AI1Step
@@ -32,7 +32,9 @@ class Gomoku:
                     if self.g_map[pos_x][pos_y] == 0:
                         self.g_map[pos_x][pos_y] = 1
                         self.cur_step += 1
-                        return
+                        return True
+                    else: return False
+                        
             except ValueError:  # 玩家输入不正确的情况（例如输入了‘A’）
                 continue
 
@@ -124,10 +126,13 @@ class Gomoku:
         for x in range(15):
             mapstring.extend(self.g_map[x])
         try:
-            node_len, ai_ope_x, ai_poe_y = example.ai_1step(self.cur_step, int(True), self.max_search_steps, mapstring)
-            ai_ope = [ai_ope_x, ai_poe_y]
+            node_len, ai_ope_x, ai_ope_y = example.ai_1step(self.cur_step, int(True), self.max_search_steps, mapstring)
+            if (ai_ope_x == -1 & ai_ope_y == -1):
+                raise ValueError('Leaf Node met')
+            ai_ope = [ai_ope_x, ai_ope_y]
         except ValueError:
             raise ValueError('AI程序计算出来的数值不正确')
+        print('Coordinate:%d %d' % (ai_ope_x, ai_ope_y))
         ed = time.time()
         print('生成了%d个节点，用时%.4f' % (node_len, ed - st))
         self.g_map[ai_ope[0]][ai_ope[1]] = 2

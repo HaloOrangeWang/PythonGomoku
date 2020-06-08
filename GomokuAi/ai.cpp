@@ -43,7 +43,7 @@ int Node::JudgeRes()
     return 0;
 }
 
-void Node::Judge4(uint32_t& ai_4_num, uint32_t& player_4_num){
+void Node::Judge4(uint64_t& ai_4_num, uint64_t& player_4_num){
     player_4_num = 0;
     ai_4_num = 0;
     int player_cnt, ai_cnt;
@@ -92,7 +92,7 @@ void Node::Judge4(uint32_t& ai_4_num, uint32_t& player_4_num){
     }
 }
 
-void Node::Judge3D(uint32_t& ai_3d_num, uint32_t& player_3d_num){
+void Node::Judge3D(uint64_t& ai_3d_num, uint64_t& player_3d_num){
     player_3d_num = 0;
     ai_3d_num = 0;
     // 1 xooox的形式
@@ -179,8 +179,8 @@ int Node::CalcScore(){
         return -100;
 
     // 2.判断玩家和电脑的四子的数目（需要保证：不是已经被堵死的四子）
-    uint32_t ai_4_num;
-    uint32_t player_4_num;
+    uint64_t ai_4_num;
+    uint64_t player_4_num;
     Judge4(ai_4_num, player_4_num);
 
     // 3.如果能够连成活四，或连成双四，则记为90分
@@ -226,8 +226,8 @@ int Node::CalcScore(){
     }
 
     // 5.判断玩家和电脑的活三的数目
-    uint32_t ai_3d_num;
-    uint32_t player_3d_num;
+    uint64_t ai_3d_num;
+    uint64_t player_3d_num;
     Judge3D(ai_3d_num, player_3d_num);
 
     // 6.如果能够连成四三，则记为80分
@@ -395,7 +395,7 @@ set<Point> Node::GetOpeList()
     return ope_list;
 }
 
-void AI1Step::Search(const uint32_t cur_node_dx, const uint32_t max_depth){
+void AI1Step::Search(const uint64_t cur_node_dx, const uint64_t max_depth){
     // 1.首先确认什么地方可以落子。落子的条件是：这个格子必须为空，周围8格内必须有至少一个棋子
     set<Point> ope_list = MethodTree[cur_node_dx].GetOpeList();
     // 2. 然后对每一个可以落子的格子进行搜索
@@ -453,7 +453,9 @@ void AI1Step::Search(const uint32_t cur_node_dx, const uint32_t max_depth){
                         NextNodeList[cur_node_dx] = static_cast<int>(node_new_dx);
                     }
                 }
-            }else{
+            }
+            
+            else{
                 if (MethodTree[cur_node_dx].Depth % 2 == 0){ //这一步是假想中电脑走的，因此需要让分数尽量大，且应该修改alpha值
                     if (MethodTree[node_new_dx].Score > MethodTree[cur_node_dx].Score){
                         MethodTree[cur_node_dx].Score = MethodTree[node_new_dx].Score;
@@ -473,7 +475,7 @@ void AI1Step::Search(const uint32_t cur_node_dx, const uint32_t max_depth){
         }else{
             //子节点还没有具体分数的情况下，应该以这个子节点为下一层的根节点，进行递归，之后再进行计算
             if (max_depth >= 2)
-                Search(static_cast<uint32_t>(node_new_dx), max_depth - 1);
+                Search(static_cast<uint64_t>(node_new_dx), max_depth - 1);
             //根据递归后计算的结果，计算这个节点的分数
             if (PlayerFirst){
                 if (MethodTree[cur_node_dx].Depth % 2 == 0){ //这一步是假想中玩家走的，因此需要让分数尽量小，且应该修改beta值
@@ -516,7 +518,7 @@ void AI1Step::Search(const uint32_t cur_node_dx, const uint32_t max_depth){
 Point AI1Step::GetFinalRes(){
     if (NextNodeList[0] == -1){
         printf("NextNodeList[0] = -1.\n");
-//        abort();
+        return Point(-1, -1);
     }
     return MethodTree[NextNodeList[0]].Ope;
 }

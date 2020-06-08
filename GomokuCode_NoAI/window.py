@@ -145,12 +145,14 @@ class GomokuWindow(QMainWindow):
             # 1. 首先判断按下了哪个格子
             mouse_x = e.windowPos().x()
             mouse_y = e.windowPos().y()
-            if (mouse_x % 40 <= 15 or mouse_x % 40 >= 25) and (mouse_y % 40 <= 15 or mouse_y % 40 >= 25):
+            if (mouse_x % 40 <= 15 or mouse_x % 40 >= 25) and (mouse_y % 40 <= 15 or mouse_y % 40 >= 25):1step
                 game_x = int((mouse_x + 15) // 40) - 1
                 game_y = int((mouse_y + 15) // 40) - 1
             else:  # 鼠标点击的位置不正确
                 return
-            self.g.move_1step(True, game_x, game_y)
+            isMoveSuccess = self.g.move_1step(True, game_x, game_y)
+            if not isMoveSuccess:
+                return
 
             # 2. 根据操作结果进行一轮游戏循环
             res, self.flash_pieces = self.g.game_result(show=True)  # 判断游戏结果

@@ -3,14 +3,14 @@
 #include <Python.h>
 #include "ai.h"
 
-Point ai_1step(int p_init_map[225], int init_depth, bool player_first, uint32_t max_depth, int& tree_size)
+Point ai_1step(int p_init_map[225], int init_depth, bool player_first, uint64_t max_depth, int& tree_size)
 {
     // 1 转换参数
     int init_map[15][15];
     for (int t = 0; t <= 224; t++){
         init_map[t / 15][t % 15] = p_init_map[t];
     }
-    //max_depth = static_cast<uint32_t>(atoi(p_max_depth));
+    //max_depth = static_cast<uint64_t>(atoi(p_max_depth));
 
     char g[550];
     sprintf(g, "%d %d %d.\n", init_depth, player_first, max_depth);
@@ -36,7 +36,7 @@ PyObject* wrap_ai_1step(PyObject* self, PyObject* args)
     int init_map[225];
     int init_depth;
     bool player_first;
-    uint32_t max_depth;
+    uint64_t max_depth;
 
     if (!PyArg_ParseTuple(args, "iiiO", &init_depth_origin, &player_first_origin, &max_depth_origin, &init_map_origin))
     {
@@ -55,7 +55,7 @@ PyObject* wrap_ai_1step(PyObject* self, PyObject* args)
     }
     init_depth = init_depth_origin;
     player_first = static_cast<bool>(player_first_origin);
-    max_depth = static_cast<uint32_t>(max_depth_origin);
+    max_depth = static_cast<uint64_t>(max_depth_origin);
     int tree_size;
     Point res = ai_1step(init_map, init_depth, player_first, max_depth, tree_size);
     return Py_BuildValue("iii", tree_size, res.X, res.Y);
