@@ -22,79 +22,92 @@ class Gomoku:
         :param input_by_window: 是否从图形界面输入
         :param pos_x: 从图形界面输入时，输入的x坐标为多少
         :param pos_y: 从图形界面输入时，输入的y坐标为多少
+        :return: 落子是否成功
         """
-        while True:
-            try:
-                if not input_by_window:
-                    pos_x = int(input('x: '))  # 接受玩家的输入人
-                    pos_y = int(input('y: '))
-                if 0 <= pos_x <= 14 and 0 <= pos_y <= 14:  # 判断这个格子能否落子
-                    if self.g_map[pos_x][pos_y] == 0:
-                        self.g_map[pos_x][pos_y] = 1
-                        self.cur_step += 1
-                        return
-            except ValueError:  # 玩家输入不正确的情况（例如输入了‘A’）
-                continue
+        try:
+            if not input_by_window:
+                pos_x = int(input('x: '))  # 接受玩家的输入
+                pos_y = int(input('y: '))
+            if 0 <= pos_x <= 14 and 0 <= pos_y <= 14:  # 判断这个格子能否落子
+                if self.g_map[pos_x][pos_y] == 0:
+                    self.g_map[pos_x][pos_y] = 1
+                    self.cur_step += 1
+                    return True
+                else:
+                    print("该位置已经有棋子，请选择其他位置。")
+            else:
+                print("输入的坐标不在有效范围内，请输入0到14之间的数字。")
+        except ValueError:  # 玩家输入不正确的情况（例如输入了‘A’）
+            print("输入无效，请输入有效的数字坐标。")
+        return False
 
     def game_result(self, show=False):
         """判断游戏的结局。0为游戏进行中，1为玩家获胜，2为电脑获胜，3为平局"""
-        # 1. 判断是否横向连续五子
+        # 判断是否横向连续五子
         for x in range(11):
             for y in range(15):
-                if self.g_map[x][y] == 1 and self.g_map[x + 1][y] == 1 and self.g_map[x + 2][y] == 1 and self.g_map[x + 3][y] == 1 and self.g_map[x + 4][y] == 1:
+                if self.g_map[x][y] == 1 and self.g_map[x + 1][y] == 1 and self.g_map[x + 2][y] == 1 and \
+                        self.g_map[x + 3][y] == 1 and self.g_map[x + 4][y] == 1:
                     if show:
                         return 1, [(x0, y) for x0 in range(x, x + 5)]
                     else:
                         return 1
-                if self.g_map[x][y] == 2 and self.g_map[x + 1][y] == 2 and self.g_map[x + 2][y] == 2 and self.g_map[x + 3][y] == 2 and self.g_map[x + 4][y] == 2:
+                if self.g_map[x][y] == 2 and self.g_map[x + 1][y] == 2 and self.g_map[x + 2][y] == 2 and \
+                        self.g_map[x + 3][y] == 2 and self.g_map[x + 4][y] == 2:
                     if show:
                         return 2, [(x0, y) for x0 in range(x, x + 5)]
                     else:
                         return 2
 
-        # 2. 判断是否纵向连续五子
+        # 判断是否纵向连续五子
         for x in range(15):
             for y in range(11):
-                if self.g_map[x][y] == 1 and self.g_map[x][y + 1] == 1 and self.g_map[x][y + 2] == 1 and self.g_map[x][y + 3] == 1 and self.g_map[x][y + 4] == 1:
+                if self.g_map[x][y] == 1 and self.g_map[x][y + 1] == 1 and self.g_map[x][y + 2] == 1 and self.g_map[x][
+                    y + 3] == 1 and self.g_map[x][y + 4] == 1:
                     if show:
                         return 1, [(x, y0) for y0 in range(y, y + 5)]
                     else:
                         return 1
-                if self.g_map[x][y] == 2 and self.g_map[x][y + 1] == 2 and self.g_map[x][y + 2] == 2 and self.g_map[x][y + 3] == 2 and self.g_map[x][y + 4] == 2:
+                if self.g_map[x][y] == 2 and self.g_map[x][y + 1] == 2 and self.g_map[x][y + 2] == 2 and \
+                        self.g_map[x][y + 3][y + 4] == 2:
                     if show:
                         return 2, [(x, y0) for y0 in range(y, y + 5)]
                     else:
                         return 2
 
-        # 3. 判断是否有左上-右下的连续五子
+        # 判断是否有左上-右下的连续五子
         for x in range(11):
             for y in range(11):
-                if self.g_map[x][y] == 1 and self.g_map[x + 1][y + 1] == 1 and self.g_map[x + 2][y + 2] == 1 and self.g_map[x + 3][y + 3] == 1 and self.g_map[x + 4][y + 4] == 1:
+                if self.g_map[x][y] == 1 and self.g_map[x + 1][y + 1] == 1 and self.g_map[x + 2][y + 2] == 1 and \
+                        self.g_map[x + 3][y + 3] == 1 and self.g_map[x + 4][y + 4] == 1:
                     if show:
                         return 1, [(x + t, y + t) for t in range(5)]
                     else:
                         return 1
-                if self.g_map[x][y] == 2 and self.g_map[x + 1][y + 1] == 2 and self.g_map[x + 2][y + 2] == 2 and self.g_map[x + 3][y + 3] == 2 and self.g_map[x + 4][y + 4] == 2:
+                if self.g_map[x][y] == 2 and self.g_map[x + 1][y + 1] == 2 and self.g_map[x + 2][y + 2] == 2 and \
+                        self.g_map[x + 3][y + 3] == 2 and self.g_map[x + 4][y + 4] == 2:
                     if show:
                         return 2, [(x + t, y + t) for t in range(5)]
                     else:
                         return 2
 
-        # 4. 判断是否有右上-左下的连续五子
+        # 判断是否有右上-左下的连续五子
         for x in range(11):
             for y in range(11):
-                if self.g_map[x + 4][y] == 1 and self.g_map[x + 3][y + 1] == 1 and self.g_map[x + 2][y + 2] == 1 and self.g_map[x + 1][y + 3] == 1 and self.g_map[x][y + 4] == 1:
+                if self.g_map[x + 4][y] == 1 and self.g_map[x + 3][y + 1] == 1 and self.g_map[x + 2][y + 2] == 1 and \
+                        self.g_map[x + 1][y + 3] == 1 and self.g_map[x][y + 4] == 1:
                     if show:
                         return 1, [(x + t, y + 4 - t) for t in range(5)]
                     else:
                         return 1
-                if self.g_map[x + 4][y] == 2 and self.g_map[x + 3][y + 1] == 2 and self.g_map[x + 2][y + 2] == 2 and self.g_map[x + 1][y + 3] == 2 and self.g_map[x][y + 4] == 2:
+                if self.g_map[x + 4][y] == 2 and self.g_map[x + 3][y + 1] == 2 and self.g_map[x + 2][y + 2] == 2 and \
+                        self.g_map[x + 1][y + 3] == 2 and self.g_map[x][y + 4] == 2:
                     if show:
                         return 2, [(x + t, y + 4 - t) for t in range(5)]
                     else:
                         return 2
 
-        # 5. 判断是否为平局
+        # 判断是否为平局
         for x in range(15):
             for y in range(15):
                 if self.g_map[x][y] == 0:  # 棋盘中还有剩余的格子，不能判断为平局
@@ -182,7 +195,9 @@ class Gomoku:
 
     def play(self):
         while True:
-            self.move_1step()  # 玩家下一步
+            move_successful = self.move_1step()  # 玩家下一步
+            if not move_successful:
+                continue
             res = self.game_result()  # 判断游戏结果
             if res != 0:  # 如果游戏结果为“已经结束”，则显示游戏内容，并退出主循环
                 self.show(res)
