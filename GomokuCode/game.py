@@ -23,18 +23,23 @@ class Gomoku:
         :param pos_x: 从图形界面输入时，输入的x坐标为多少
         :param pos_y: 从图形界面输入时，输入的y坐标为多少
         """
-        while True:
-            try:
-                if not input_by_window:
-                    pos_x = int(input('x: '))  # 接受玩家的输入人
-                    pos_y = int(input('y: '))
-                if 0 <= pos_x <= 14 and 0 <= pos_y <= 14:  # 判断这个格子能否落子
-                    if self.g_map[pos_x][pos_y] == 0:
-                        self.g_map[pos_x][pos_y] = 1
-                        self.cur_step += 1
-                        return
-            except ValueError:  # 玩家输入不正确的情况（例如输入了‘A’）
-                continue
+
+        if not input_by_window:
+            pos_x = int(input('x: '))  # 接受玩家的输入人
+            pos_y = int(input('y: '))
+        if 0 <= pos_x <= 14 and 0 <= pos_y <= 14:  # 判断这个格子能否落子
+            if self.g_map[pos_x][pos_y] == 0:
+                self.g_map[pos_x][pos_y] = 1
+                self.cur_step += 1
+                '''
+                正确落子之后返回true
+                '''
+                return True
+        '''
+        没有正确落子后返回false
+        '''
+        return False
+
 
     def game_result(self, show=False):
         """判断游戏的结局。0为游戏进行中，1为玩家获胜，2为电脑获胜，3为平局"""

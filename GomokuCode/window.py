@@ -150,7 +150,11 @@ class GomokuWindow(QMainWindow):
                 game_y = int((mouse_y + 15) // 40) - 1
             else:  # 鼠标点击的位置不正确
                 return
-            self.g.move_1step(True, game_x, game_y)
+            '''
+            添加一个判断，如果落子失败不执行任何操作
+            '''
+            if self.g.move_1step(True, game_x, game_y) == False:
+                return
 
             # 2. 根据操作结果进行一轮游戏循环
             res, self.flash_pieces = self.g.game_result(show=True)  # 判断游戏结果
