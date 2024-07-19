@@ -120,6 +120,7 @@ class GomokuWindow(QMainWindow):
             game_x = -1
             game_y = -1
 
+
         # 2. 然后判断鼠标位置较前一时刻是否发生了变化
         pos_change = False  # 标记鼠标位置是否发生了变化
         if game_x != self.last_pos[0] or game_y != self.last_pos[1]:
@@ -150,15 +151,24 @@ class GomokuWindow(QMainWindow):
                 game_y = int((mouse_y + 15) // 40) - 1
             else:  # 鼠标点击的位置不正确
                 return
-            self.g.move_1step(True, game_x, game_y)
 
-            # 2. 根据操作结果进行一轮游戏循环
+            # 2. 检查点击的位置是否已经有棋子
+            if self.g.g_map[game_x][game_y] != 0:
+                return  # 若点击的位置有棋子，则忽略操作
+
+            # 添加边界检查
+            if not (0 <= game_x < 15 and 0 <= game_y < 15):
+                return  # 若点击的位置超出边界，则忽略操作
+
+            # 3. 执行落子操作
+            self.g.move_1step(True, game_x, game_y)
             res, self.flash_pieces = self.g.game_result(show=True)  # 判断游戏结果
             if res != 0:  # 如果游戏结果为“已经结束”，则显示游戏内容，并退出主循环
                 self.repaint(0, 0, 650, 650)
                 self.game_restart(res)
                 return
-            # self.g.ai_move_1step()  # 电脑下一步
+
+            # 电脑下一步
             self.g.ai_play_1step()  # 电脑下一步
             res, self.flash_pieces = self.g.game_result(show=True)
             if res != 0:
